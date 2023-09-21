@@ -4,51 +4,73 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 use App\Models\User;
+
+use App\Http\Requests\StoreUserRequest;
+
+use Hash;
 
 class UserController extends Controller
 {
   //
-  public function index($apiKey) {
-    if(!$this->validateApiKey($apiKey)) {
-		return response()->json([
-			'status' => FALSE,
-			'error' => 'Invalid API Key.'
-		],200);
-    }
+  public function index() {
     $users = User::all();
 
     return response()->json([
-		'status' => TRUE,
-		'users' => $users
+      'status' => true,
+      'users' => $users
     ], 200);
   }
 
-  public function checkEmail(Request $request, $apiKey) {
-    if(!$this->validateApiKey($apiKey)) {
-      return response()->json([
-        'status' => FALSE,
-        'error' => 'Invalid API Key.'
-      ],200);
-    }
-
-    $request->validate([
-      'email' => 'required|email'
+  public function storeUser(StoreUserRequest $request) {
+    $user = User::create([
+      'first_name' => $request->input('first_name'),
+      'last_name' => $request->input('last_name'),
+      'email' => $request->input('email'),
+      'password' => Hash::make($request->input('first_name')),
     ]);
 
-    $user = User::where('email',$request->email)->first();
+    if($user) {
+      return response()->json([
+        'success' => true,
+        'data' => [
+          'data' => [
+            'id' => $user->id
+          ],
+          'success' => true,
+          'error' => ''
+        ],
+      ], 200);
+    }
+  }
+
+  public function checkEmail(Request $request) {
+    $validator = Validator::make($request->all(), [
+      'email' => 'required|email',
+    ]);
+
+    if ($validator->fails()) {
+      return response()->json([
+        'success' => false,
+        'data' => [],
+        'errors' => $validator->errors(),
+      ], 422); // 422 is the status code for Unprocessable Entity
+    }
+
+    $user = User::where('email', $request->input('email'))->first();
 
     if(empty($user)) {
       return response()->json([
-        'success' => TRUE,
+        'success' => true,
         'data' => [
           'data' => [],
-          'success' => FALSE,
+          'success' => false,
           'error' => 'Email is available.'
         ],
 
-      ],200);
+      ], 200);
     } else {
       $data = [
         'id' => $user->id,
@@ -57,24 +79,14 @@ class UserController extends Controller
       ];
 
       return response()->json([
-        'success' => TRUE,
+        'success' => true,
         'data' => [
           'data' => $data,
-          'success' => TRUE,
+          'success' => true,
           'error' => ''
         ],
 
-      ],200);
+      ], 200);
     }
-  }
-
-  private function validateApiKey($apiKey) {
-    $status = FALSE;
-    
-    if($apiKey == md5('dntrademark.com')) {
-      $status = TRUE;
-    }
-
-    return $status;
   }
 }

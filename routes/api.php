@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\EnsureApiKeyIsValid;
 
 use App\Http\Controllers\Api\v1\UserController;
 
@@ -23,8 +24,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('v1')->namespace('v1')->group(function() {
 	Route::prefix('dntrademark')->group(function() {
 		Route::prefix('users')->group(function() {
-			Route::get('check/{apiKey}',[ UserController::class, 'checkEmail' ]);
-			Route::get('/{apiKey}',[ UserController::class, 'index' ]);
+			Route::get('/',[ UserController::class, 'index' ])->middleware(EnsureApiKeyIsValid::class);
+		});
+
+		Route::prefix('user')->group(function() {
+			Route::get('check',[ UserController::class, 'checkEmail' ])->middleware(EnsureApiKeyIsValid::class);
+			Route::post('save',[ UserController::class, 'storeUser' ])->middleware(EnsureApiKeyIsValid::class);
 		});
 	});
 });
