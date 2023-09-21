@@ -22,12 +22,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::prefix('v1')->namespace('v1')->group(function() {
-	Route::prefix('dntrademark')->group(function() {
+	Route::prefix('users')->group(function() {
 		Route::get('/',[ UserController::class, 'index' ])->middleware(EnsureApiKeyIsValid::class);
+	});
 
-		Route::prefix('user')->group(function() {
-			Route::get('check',[ UserController::class, 'checkEmail' ])->middleware(EnsureApiKeyIsValid::class);
-			Route::post('save',[ UserController::class, 'storeUser' ])->middleware(EnsureApiKeyIsValid::class);
-		});
+	Route::prefix('user')->group(function() {
+		Route::get('check',[ UserController::class, 'checkEmail' ])->middleware(EnsureApiKeyIsValid::class);
+		Route::post('save',[ UserController::class, 'storeUser' ])->middleware(EnsureApiKeyIsValid::class);
 	});
 });
