@@ -41,4 +41,8 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function() {
 	Route::prefix('packages')->group(function() {
 		Route::get('/', [ PackageController::class, 'index' ]);
 	});
+
+	Route::prefix('package')->group(function() {
+		Route::get('{id}', [ PackageController::class, 'getPackageById' ]);
+	});
 });

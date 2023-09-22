@@ -22,4 +22,17 @@ class PackageController extends Controller
 			],
 		], 200);
 	}
+
+	public function getPackageById($id) {
+		$package = Package::find($id);
+
+		return response()->json([
+			'success' => true,
+			'data' => [
+				'data' => $package,
+				'success' => true,
+				'error' => ''
+			],
+		], 200);
+	}
 }
