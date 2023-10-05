@@ -6,8 +6,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\EnsureApiKeyIsValid;
 
 use App\Http\Controllers\Api\v1\AuthController;
-use App\Http\Controllers\Api\v1\UserController;
+use App\Http\Controllers\Api\v1\DomainController;
 use App\Http\Controllers\Api\v1\PackageController;
+use App\Http\Controllers\Api\v1\PaymentController;
+use App\Http\Controllers\Api\v1\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,5 +46,21 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function() {
 
 	Route::prefix('package')->group(function() {
 		Route::get('{id}', [ PackageController::class, 'getPackageById' ]);
+	});
+
+	Route::middleware('auth:sanctum')->group(function() {
+		Route::prefix('payment')->group(function() {
+			Route::post('charge',[ PaymentController::class, 'createCharge' ]);
+		});
+
+		Route::prefix('domains')->group(function() {
+			Route::post('add',[ DomainController::class, 'storeDomains' ]);
+			Route::get('count',[ DomainController::class, 'countDomains' ]);
+			Route::get('count/no-hits',[ DomainController::class, 'countNoHitsDomains' ]);
+		});
+
+		Route::prefix('domain')->group(function() {
+			
+		});
 	});
 });

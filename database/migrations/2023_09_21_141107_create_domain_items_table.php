@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('domain_items', function (Blueprint $table) {
             $table->id();
-            $table->integer('domain_id');
+            $table->foreignId('domain_id');
             $table->string('keyword')->nullable();
             $table->string('registration_number')->nullable();
             $table->string('serial_number')->nullable();
