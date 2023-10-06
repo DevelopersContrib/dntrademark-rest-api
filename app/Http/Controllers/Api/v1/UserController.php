@@ -5,10 +5,14 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\EmailVerificationMail;
+use Illuminate\Support\Str;
 
 use App\Models\User;
 
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\LoginRequest;
 
 use Hash;
 
@@ -25,12 +29,7 @@ class UserController extends Controller
   }
 
   public function storeUser(StoreUserRequest $request) {
-    // $user = User::create([
-    //   'first_name' => $request->input('first_name'),
-    //   'last_name' => $request->input('last_name'),
-    //   'email' => $request->input('email'),
-    //   'password' => Hash::make($request->input('password')),
-    // ]);
+  
     $user = new User();
     $user->first_name = $request->input('first_name');
     $user->last_name = $request->input('last_name');
@@ -38,6 +37,9 @@ class UserController extends Controller
     $user->password = Hash::make($request->input('password'));
 
     if($user->save()) {
+      
+    $user->verification_code = Str::random(64);
+
       return response()->json([
         'success' => true,
         'data' => [
@@ -51,7 +53,7 @@ class UserController extends Controller
     }
   }
 
-  public function checkEmail(Request $request) {
+  public function checkEmail($user) {
     $validator = Validator::make($request->all(), [
       'email' => 'required|email',
     ]);
@@ -93,5 +95,55 @@ class UserController extends Controller
 
       ], 200);
     }
+  }
+
+  public function checkCredentials(LoginRequest $request) {
+    try {
+      $user = User::where('email', $request->input('email'))->first();
+
+      if(!$user) {
+        return response()->json([
+          'success' => false,
+          'error' => 'Email not found.'
+        ], 200);
+      } else {
+        if(Hash::check($request->input('password'), $user->password)) {
+          return response()->json([
+            'success' => true,
+            'error' => ''
+          ], 200);
+        } else {
+          return response()->json([
+            'success' => false,
+            'error' => 'Incorrect password.'
+          ], 200);
+        }
+      }
+    } catch (\Throwable $th) {
+      throw $th;
+    }
+  }
+
+  public function sendVerificationEmail($user) {
+    $email = $user->email;
+
+    $user = User::where('email',$email)->first();
+
+    if(empty($user->verification_code)) {
+      $user->verification_code = Str::random(64);
+
+      $user->update();
+    }
+
+    $data = [
+      'name' => ucwords($user->first_name),
+      'verification_link' => 'https://dash.dntrademark.com/auth/verify/'.$user->verification_code
+    ];
+
+    Mail::to($user->email)->later(now()->addMinutes(1), new EmailVerificationMail($data));
+
+    return response()->json([
+      'status'=>TRUE
+    ],200); 
   }
 }
