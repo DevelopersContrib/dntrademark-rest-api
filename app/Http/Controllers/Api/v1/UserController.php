@@ -110,7 +110,7 @@ class UserController extends Controller
         return response()->json([
           'success' => false,
           'error' => 'Email not found.'
-        ], 404);
+        ], 200);
       } else {
         if(Hash::check($request->input('password'), $user->password)) {
           return response()->json([
@@ -121,12 +121,9 @@ class UserController extends Controller
           return response()->json([
             'success' => false,
             'error' => 'Incorrect password.'
-          ], 422);
+          ], 200);
         }
       }
-      return response()->json([
-        'success' => $count,
-      ], 200);
     } catch (\Throwable $th) {
       throw $th;
     }
