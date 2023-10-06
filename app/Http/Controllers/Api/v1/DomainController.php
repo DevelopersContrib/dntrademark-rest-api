@@ -76,6 +76,21 @@ class DomainController extends Controller
 			}
 		}
 
+		public function countHitsDomain() {
+			try {
+				$user = Auth::user();
+
+				return response()->json([
+					'success' => true,
+					'data' => [
+						'count' => Domain::where('user_id', $user->id)->where('no_of_items', '>', 0)->count()
+					]
+				], 200);
+			} catch (\Throwable $th) {
+				return response()->json(['error' => $e->getMessage()], 500);
+			}
+		}
+
 		public function countNoHitsDomains() {
 			try {
 				$user = Auth::user();
