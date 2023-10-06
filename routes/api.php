@@ -36,8 +36,9 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function() {
 	});
 
 	Route::prefix('user')->group(function() {
-		Route::get('check',[ UserController::class, 'checkEmail' ]);
 		Route::post('save',[ UserController::class, 'storeUser' ]);
+		Route::get('check',[ UserController::class, 'checkEmail' ]);
+		Route::post('check/credentials',[ UserController::class, 'checkCredentials' ]);
 	});
 
 	Route::prefix('packages')->group(function() {

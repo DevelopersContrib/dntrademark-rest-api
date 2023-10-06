@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use App\Models\User;
 
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\LoginRequest;
 
 use Hash;
 
@@ -98,6 +99,36 @@ class UserController extends Controller
         ],
 
       ], 200);
+    }
+  }
+
+  public function checkCredentials(LoginRequest $request) {
+    try {
+      $user = User::where('email', $request->input('email'))->first();
+
+      if(!$user) {
+        return response()->json([
+          'success' => false,
+          'error' => 'Email not found.'
+        ], 404);
+      } else {
+        if(Hash::check($request->input('password'), $user->password)) {
+          return response()->json([
+            'success' => true,
+            'error' => ''
+          ], 200);
+        } else {
+          return response()->json([
+            'success' => false,
+            'error' => 'Incorrect password.'
+          ], 422);
+        }
+      }
+      return response()->json([
+        'success' => $count,
+      ], 200);
+    } catch (\Throwable $th) {
+      throw $th;
     }
   }
 
