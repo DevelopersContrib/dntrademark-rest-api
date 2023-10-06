@@ -29,22 +29,17 @@ class UserController extends Controller
   }
 
   public function storeUser(StoreUserRequest $request) {
-    // $user = User::create([
-    //   'first_name' => $request->input('first_name'),
-    //   'last_name' => $request->input('last_name'),
-    //   'email' => $request->input('email'),
-    //   'password' => Hash::make($request->input('password')),
-    // ]);
-
+  
     $user = new User();
     $user->first_name = $request->input('first_name');
     $user->last_name = $request->input('last_name');
     $user->email = $request->input('email');
     $user->password = Hash::make($request->input('password'));
-    $user->verification_code = Str::random(64);
 
     if($user->save()) {
-      $this->sendVerificationEmail($user);
+      
+    $user->verification_code = Str::random(64);
+
       return response()->json([
         'success' => true,
         'data' => [
