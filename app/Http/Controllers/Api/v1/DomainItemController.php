@@ -18,7 +18,7 @@ class DomainItemController extends Controller
             $domainItem = new DomainItem();
             $domainItem->domain_id = $domain->id;
             $domainItem->keyword = $request->keyword;
-            $domainItem->registration_number = $request->registration_name;
+            $domainItem->registration_number = $request->registration_number;
             $domainItem->serial_number = $request->serial_number;
             $domainItem->status_label = $request->status_label;
             $domainItem->status_definition = $request->status_definition;

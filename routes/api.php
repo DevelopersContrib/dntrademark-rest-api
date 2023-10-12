@@ -68,6 +68,7 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function () {
 
 		//Domain
 		Route::prefix('domains')->group(function () {
+			Route::get('/', [DomainController::class, 'index']);
 			Route::post('add', [DomainController::class, 'storeDomains']);
 			Route::get('count', [DomainController::class, 'countDomains']);
 			Route::get('count/hits', [DomainController::class, 'countHitsDomain']);

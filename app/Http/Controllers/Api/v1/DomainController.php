@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Domain;
 
 use App\Http\Requests\StoreDomainRequest;
+use App\Http\Resources\DomainResource;
 use Illuminate\Http\JsonResponse;
 
 class DomainController extends Controller
@@ -16,6 +17,21 @@ class DomainController extends Controller
 	private function isValidDomain($domain)
 	{
 		return preg_match('/^(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.[A-Za-z]{2,})+$/', $domain) ? true : false;
+	}
+
+	public function index(Request $request)
+	{
+		try {
+			$user = $request->user();
+			$domains = Domain::with('items')->where('user_id', $user->id)->get();
+
+			return response()->json([
+				'succes' => true,
+				'domains' => DomainResource::collection($domains)
+			]);
+		} catch (\Throwable $th) {
+			throw $th;
+		}
 	}
 
 	public function storeDomains(StoreDomainRequest $request)
@@ -112,6 +128,27 @@ class DomainController extends Controller
 			], 200);
 		} catch (\Exception  $e) {
 			return response()->json(['error' => $e->getMessage()], 500);
+		}
+	}
+
+	public function getDomainsAtRisk(Request $request)
+	{
+		try {
+			$user = $request->user();
+			$domains = Domain::where('user_id', $user->id)->with('items')->get();
+
+			$filteredDomains = Domain::whereHas('items', function ($query) {
+				$query->where('status_label', 'like', '%pending%')
+					->where('registration_number', '0000000')
+					->where('status_definition', 'like', '%NEW%');
+			})->get();
+
+			return response()->json([
+				'success' => true,
+				'domains' => DomainResource::collection($filteredDomains)
+			], JsonResponse::HTTP_OK);
+		} catch (\Throwable $th) {
+			throw $th;
 		}
 	}
 }

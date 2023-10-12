@@ -18,11 +18,13 @@ class Domain extends Model
         'no_of_items'
     ];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function domainItems() {
+    public function items()
+    {
         return $this->hasMany(DomainItem::class);
     }
 }
