@@ -62,6 +62,8 @@ class UserController extends Controller
       $data = $request->validated();
       $data = array_filter($data);
 
+
+
       return response()->json([
         'success' => true,
         'data' => [
