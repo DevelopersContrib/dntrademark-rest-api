@@ -14,6 +14,8 @@ use App\Models\User;
 
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\UpdateUserRequest;
+use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller
 {
@@ -51,6 +53,26 @@ class UserController extends Controller
           'error' => ''
         ],
       ], 200);
+    }
+  }
+
+  public function updateUser(UpdateUserRequest $request, User $user): JsonResponse
+  {
+    try {
+      $data = $request->validated();
+      $data = array_filter($data);
+
+      return response()->json([
+        'success' => true,
+        'data' => [
+          'user' => $user
+        ]
+      ]);
+    } catch (\Exception $e) {
+      return response()->json([
+        'success' => false,
+        'error' => $e->getMessage()
+      ]);
     }
   }
 
