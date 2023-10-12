@@ -7,6 +7,7 @@ use App\Http\Middleware\EnsureApiKeyIsValid;
 
 use App\Http\Controllers\Api\v1\AuthController;
 use App\Http\Controllers\Api\v1\DomainController;
+use App\Http\Controllers\Api\V1\DomainItemController;
 use App\Http\Controllers\Api\v1\PackageController;
 use App\Http\Controllers\Api\v1\PaymentController;
 use App\Http\Controllers\Api\v1\UserController;
@@ -31,6 +32,7 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function () {
 		Route::post('login', [AuthController::class, 'login'])->name('login');
 	});
 
+	//Public API endpoints
 	Route::prefix('users')->group(function () {
 		Route::get('/', [UserController::class, 'index']);
 	});
@@ -48,6 +50,7 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function () {
 	Route::prefix('package')->group(function () {
 		Route::get('{id}', [PackageController::class, 'getPackageById']);
 	});
+	//End of public API endpoints
 
 	Route::middleware('auth:sanctum')->group(function () {
 		//logout
@@ -58,15 +61,23 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function () {
 			Route::post('charge', [PaymentController::class, 'createCharge']);
 		});
 
+		//User
 		Route::prefix('user')->group(function () {
-			Route::put('update/{user}', [UserController::class, 'updateUser']);
+			Route::put('update', [UserController::class, 'updateUser']);
 		});
 
+		//Domain
 		Route::prefix('domains')->group(function () {
 			Route::post('add', [DomainController::class, 'storeDomains']);
 			Route::get('count', [DomainController::class, 'countDomains']);
 			Route::get('count/hits', [DomainController::class, 'countHitsDomain']);
 			Route::get('count/no-hits', [DomainController::class, 'countNoHitsDomains']);
+			Route::get('risks', [DomainController::class, 'getDomainsAtRisk']);
+		});
+
+		//Domain Item
+		Route::prefix('item')->group(function () {
+			Route::post('/{domain:domain_name}', [DomainItemController::class, 'store']);
 		});
 	});
 });

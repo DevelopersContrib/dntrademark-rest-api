@@ -56,18 +56,14 @@ class UserController extends Controller
     }
   }
 
-  public function updateUser(UpdateUserRequest $request, User $user): JsonResponse
+  public function updateUser(UpdateUserRequest $request): JsonResponse
   {
     try {
+      $user = $request->user();
       $data = $request->validated();
       $data = array_filter($data);
 
-      $user->first_name = $data['first_name'];
-      $user->last_name = $data['last_name'];
-      $user->package_id = $data['package_id'];
-      $user->is_onboarding = $data['is_onboarding'];
-
-      $user->save();
+      $user->update($data);
 
       return response()->json([
         'success' => true,

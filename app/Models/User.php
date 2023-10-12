@@ -19,7 +19,13 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'first_name',
+        'last_name',
+        'package_id',
+        'is_onboarding',
+        'is_admin'
+    ];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -42,7 +48,13 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function domains() {
+    public function domains()
+    {
         return $this->hasMany(Domain::class);
+    }
+
+    public function package()
+    {
+        return $this->hasOne(Package::class, 'package_id');
     }
 }
