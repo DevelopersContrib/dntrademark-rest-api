@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Domain;
 
 use App\Http\Requests\StoreDomainRequest;
+use Illuminate\Http\JsonResponse;
 
 class DomainController extends Controller
 {
@@ -20,9 +21,9 @@ class DomainController extends Controller
 	public function storeDomains(StoreDomainRequest $request)
 	{
 		try {
-			$user = Auth::user();
-			$domains = explode('\n', $request->input('domains'));
-			$domain = array_map('trim', $domains);
+			$user = $request->user();
+			$domains = explode(',', $request->input('domains'));
+			$domains = array_map('trim', $domains);
 			$domainsArr = [];
 
 			foreach ($domains as $domain) {
@@ -44,6 +45,7 @@ class DomainController extends Controller
 				if ($isSaved) {
 					return response()->json([
 						'success' => $isSaved,
+						'message' => count($domainsArr) > 1 ? 'Domains saved.' : 'Domain is saved.'
 					], 200);
 				} else {
 					return response()->json([
@@ -57,8 +59,11 @@ class DomainController extends Controller
 					'error' => count($domains) ? 'The domains already exist.' : 'The domain is already exists.'
 				], 422);
 			}
-		} catch (\Throwable $th) {
-			throw $th;
+		} catch (\Exception $e) {
+			return response()->json([
+				'success' => false,
+				'error' => $e->getMessage()
+			], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
 		}
 	}
 

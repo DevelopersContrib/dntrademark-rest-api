@@ -68,8 +68,5 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function () {
 			Route::get('count/hits', [DomainController::class, 'countHitsDomain']);
 			Route::get('count/no-hits', [DomainController::class, 'countNoHitsDomains']);
 		});
-
-		Route::prefix('domain')->group(function () {
-		});
 	});
 });

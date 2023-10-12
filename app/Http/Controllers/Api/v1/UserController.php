@@ -62,11 +62,16 @@ class UserController extends Controller
       $data = $request->validated();
       $data = array_filter($data);
 
+      $user->first_name = $data['first_name'];
+      $user->last_name = $data['last_name'];
+      $user->package_id = $data['package_id'];
+      $user->is_onboarding = $data['is_onboarding'];
+
+      $user->save();
+
       return response()->json([
         'success' => true,
-        'data' => [
-          'user' => $user
-        ]
+        'user' => $user
       ]);
     } catch (\Exception $e) {
       return response()->json([
