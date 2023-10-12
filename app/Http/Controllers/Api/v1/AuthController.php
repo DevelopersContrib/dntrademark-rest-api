@@ -12,18 +12,22 @@ use Hash;
 
 class AuthController extends Controller
 {
-    //
+	//
 	public function login(Request $request)
 	{
 		try {
 			$credentials = $request->only('email', 'password');
 
-			if(Auth::attempt($credentials)) {
-				$user = Auth::user();
+			if (Auth::attempt($credentials)) {
+				$user = $request->user();
 				$token = $user->createToken('auth-token')->plainTextToken;
 
 				return response()->json([
-					'token' => $token,
+					'success' => true,
+					'data' => [
+						'user' => $user,
+						'token' => $token,
+					]
 				], 200);
 			}
 
@@ -31,6 +35,5 @@ class AuthController extends Controller
 		} catch (\Throwable $th) {
 			throw $th;
 		}
-		
 	}
 }
