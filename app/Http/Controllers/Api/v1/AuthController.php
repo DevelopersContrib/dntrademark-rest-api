@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 
 use Hash;
+use Illuminate\Http\JsonResponse;
 
 class AuthController extends Controller
 {
@@ -34,6 +35,27 @@ class AuthController extends Controller
 			return response()->json(['message' => 'Unauthorized'], 401);
 		} catch (\Throwable $th) {
 			throw $th;
+		}
+	}
+
+	public function destroy(Request $request): JsonResponse
+	{
+		try {
+			$user = $request->user();
+
+			if ($user->currentAccessToken()) {
+				$user->currentAccessToken()->delete();
+			} else {
+				$user->tokens()->delete();
+			}
+
+			return response()->json([], JsonResponse::HTTP_NO_CONTENT);
+			// return response()->noContent();
+		} catch (\Exception $e) {
+			return response()->json([
+				'success' => false,
+				'error' => $e->getMessage()
+			], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
 		}
 	}
 }

@@ -26,43 +26,50 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 	return $request->user();
 });
 
-Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function() {
-	Route::prefix('auth')->group(function() {
-		Route::post('login',[ AuthController::class, 'login' ]);
+Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function () {
+	Route::prefix('auth')->group(function () {
+		Route::post('login', [AuthController::class, 'login'])->name('login');
 	});
 
-	Route::prefix('users')->group(function() {
-		Route::get('/',[ UserController::class, 'index' ]);
+	Route::prefix('users')->group(function () {
+		Route::get('/', [UserController::class, 'index']);
 	});
 
-	Route::prefix('user')->group(function() {
-		Route::post('save',[ UserController::class, 'storeUser' ]);
-		Route::get('check',[ UserController::class, 'checkEmail' ]);
-		Route::post('check/credentials',[ UserController::class, 'checkCredentials' ]);
+	Route::prefix('user')->group(function () {
+		Route::post('save', [UserController::class, 'storeUser']);
+		Route::get('check', [UserController::class, 'checkEmail']);
+		Route::post('check/credentials', [UserController::class, 'checkCredentials']);
 	});
 
-	Route::prefix('packages')->group(function() {
-		Route::get('/', [ PackageController::class, 'index' ]);
+	Route::prefix('packages')->group(function () {
+		Route::get('/', [PackageController::class, 'index']);
 	});
 
-	Route::prefix('package')->group(function() {
-		Route::get('{id}', [ PackageController::class, 'getPackageById' ]);
+	Route::prefix('package')->group(function () {
+		Route::get('{id}', [PackageController::class, 'getPackageById']);
 	});
 
-	Route::middleware('auth:sanctum')->group(function() {
-		Route::prefix('payment')->group(function() {
-			Route::post('charge',[ PaymentController::class, 'createCharge' ]);
+	Route::middleware('auth:sanctum')->group(function () {
+		//logout
+		Route::post('auth/logout', [AuthController::class, 'destroy'])->name('logout');
+
+		//Payment
+		Route::prefix('payment')->group(function () {
+			Route::post('charge', [PaymentController::class, 'createCharge']);
 		});
 
-		Route::prefix('domains')->group(function() {
-			Route::post('add',[ DomainController::class, 'storeDomains' ]);
-			Route::get('count',[ DomainController::class, 'countDomains' ]);
-			Route::get('count/hits',[ DomainController::class, 'countHitsDomain' ]);
-			Route::get('count/no-hits',[ DomainController::class, 'countNoHitsDomains' ]);
+		Route::prefix('user')->group(function () {
+			Route::put('update/{user}', [UserController::class, 'updateUser']);
 		});
 
-		Route::prefix('domain')->group(function() {
-			
+		Route::prefix('domains')->group(function () {
+			Route::post('add', [DomainController::class, 'storeDomains']);
+			Route::get('count', [DomainController::class, 'countDomains']);
+			Route::get('count/hits', [DomainController::class, 'countHitsDomain']);
+			Route::get('count/no-hits', [DomainController::class, 'countNoHitsDomains']);
+		});
+
+		Route::prefix('domain')->group(function () {
 		});
 	});
 });
