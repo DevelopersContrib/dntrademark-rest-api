@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->integer('package_id')->nullable();
+            $table->foreignId('package_id')->default(1);
             $table->date('package_expiry')->nullable();
             $table->tinyInteger('is_admin')->default('0');
             $table->timestamp('email_verified_at')->nullable();

@@ -22,6 +22,9 @@ class UserResource extends JsonResource
             'package_id' => $this->package_id,
             'is_admin' => $this->is_admin,
             'is_onboarding' => $this->is_onboarding,
+            'package' => $this->whenLoaded('package', function () {
+                return new PackageResource($this->package);
+            })
         ];
     }
 }

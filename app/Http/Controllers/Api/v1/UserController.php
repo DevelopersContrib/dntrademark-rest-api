@@ -15,7 +15,9 @@ use App\Models\User;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -30,6 +32,21 @@ class UserController extends Controller
     ], 200);
   }
 
+  public function show(Request $request, User $user)
+  {
+    try {
+      $user = $request->user();
+      $user = User::with('package')->first();
+
+      return response()->json([
+        'success' => true,
+        'user' => new UserResource($user)
+      ], JsonResponse::HTTP_OK);
+    } catch (\Throwable $th) {
+      throw $th;
+    }
+  }
+
   public function storeUser(StoreUserRequest $request)
   {
 
@@ -42,12 +59,16 @@ class UserController extends Controller
     if ($user->save()) {
 
       $user->verification_code = Str::random(64);
+      Auth::login($user);
+
+      $token = $user->createToken('api-token')->plainTextToken;
 
       return response()->json([
         'success' => true,
         'data' => [
           'data' => [
-            'id' => $user->id
+            'id' => $user->id,
+            'token' => $token
           ],
           'success' => true,
           'error' => ''
