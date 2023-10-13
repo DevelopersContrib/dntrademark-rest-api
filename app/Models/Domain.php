@@ -15,7 +15,9 @@ class Domain extends Model
     protected $fillable = [
         'user_id',
         'domain_name',
-        'no_of_items'
+        'no_of_items',
+        'created_at',
+        'updated_at',
     ];
 
     public function user()
