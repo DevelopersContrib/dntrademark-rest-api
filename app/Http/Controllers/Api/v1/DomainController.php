@@ -66,10 +66,11 @@ class DomainController extends Controller
 				$isSaved = Domain::insert($domainsArr);
 
 				if ($isSaved) {
+					$message = count($domainsArr) . ' out of ' . count($domains) . (count($domains) > 1 ? ' domains are saved.' : ' domains is saved.');
 					return response()->json([
 						'success' => $isSaved,
-						'message' => count($domainsArr) > 1 ? 'Domains saved.' : 'Domain is saved.'
-					], 200);
+						'message' =>  $message,
+					], JsonResponse::HTTP_OK);
 				} else {
 					return response()->json([
 						'success' => false,
