@@ -43,30 +43,47 @@ class DomainController extends Controller
 			$domains = explode(',', $request->input('domains'));
 			$domains = array_map('trim', $domains);
 			$domainsArr = [];
+			$message = '';
 
 			$currentDateTime = Carbon::now();
 			$formattedDateTime = $currentDateTime->format('Y-m-d H:i:s');
 
-			foreach ($domains as $domain) {
-				if ($this->isValidDomain($domain)) {
-					$count = Domain::where('domain_name', $domain)->count();
-					if ($count < 1) {
-						array_push($domainsArr, [
-							'user_id' => $user->id,
-							'domain_name' => $domain,
-							'no_of_items' => 0,
-							'created_at' => $formattedDateTime,
-							'updated_at' => $formattedDateTime,
-						]);
+			$userDomainsCount = Domain::where('user_id', $user->id)->count();
+			$package = $user->package;
+
+			if ($userDomainsCount < $package->end_limit) {
+				foreach ($domains as $domain) {
+					if ($this->isValidDomain($domain)) {
+						$count = Domain::where('domain_name', $domain)->count();
+						if ($count < 1) {
+							array_push($domainsArr, [
+								'user_id' => $user->id,
+								'domain_name' => $domain,
+								'no_of_items' => 0,
+								'created_at' => $formattedDateTime,
+								'updated_at' => $formattedDateTime,
+							]);
+							$totalAddedDomains = $userDomainsCount + count($domainsArr);
+
+							if ($totalAddedDomains >= $package->end_limit) {
+								$message = ' Cannot add more domains. Upgrade your plan to add more domains.';
+								break;
+							}
+						}
 					}
 				}
+			} else {
+				return response()->json([
+					'success' => false,
+					'error' => 'Unable to add more domains. Upgrade your plan to add more domains.'
+				], JsonResponse::HTTP_ACCEPTED);
 			}
 
 			if (count($domainsArr) > 0) {
 				$isSaved = Domain::insert($domainsArr);
 
 				if ($isSaved) {
-					$message = count($domainsArr) . ' out of ' . count($domains) . (count($domains) > 1 ? ' domains are saved.' : ' domains is saved.');
+					$message = count($domainsArr) . ' out of ' . count($domains) . (count($domainsArr) > 1 ? ' domains are saved.' : ' domain is saved.') . $message;
 					return response()->json([
 						'success' => $isSaved,
 						'message' =>  $message,
