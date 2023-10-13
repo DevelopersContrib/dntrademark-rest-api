@@ -35,7 +35,6 @@ class UserController extends Controller
   public function show(Request $request, User $user)
   {
     try {
-      $user = $request->user();
       $user = User::with('package')->first();
 
       return response()->json([
