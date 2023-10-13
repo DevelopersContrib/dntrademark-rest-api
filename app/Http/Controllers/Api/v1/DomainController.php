@@ -74,13 +74,13 @@ class DomainController extends Controller
 					return response()->json([
 						'success' => false,
 						'error' => 'Unable to save domains. Please try again!'
-					], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+					], JsonResponse::HTTP_ACCEPTED);
 				}
 			} else {
 				return response()->json([
 					'success' => false,
 					'error' => count($domains) ? 'The domains already exist.' : 'The domain is already exists.'
-				], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+				], JsonResponse::HTTP_ACCEPTED);
 			}
 		} catch (\Exception $e) {
 			return response()->json([
