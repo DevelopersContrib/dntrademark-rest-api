@@ -10,7 +10,9 @@ use App\Models\Domain;
 
 use App\Http\Requests\StoreDomainRequest;
 use App\Http\Resources\DomainResource;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class DomainController extends Controller
 {
@@ -42,6 +44,9 @@ class DomainController extends Controller
 			$domains = array_map('trim', $domains);
 			$domainsArr = [];
 
+			$currentDateTime = Carbon::now();
+			$formattedDateTime = $currentDateTime->format('Y-m-d H:i:s');
+
 			foreach ($domains as $domain) {
 				if ($this->isValidDomain($domain)) {
 					$count = Domain::where('domain_name', $domain)->count();
@@ -49,7 +54,9 @@ class DomainController extends Controller
 						array_push($domainsArr, [
 							'user_id' => $user->id,
 							'domain_name' => $domain,
-							'no_of_items' => 0
+							'no_of_items' => 0,
+							'created_at' => $formattedDateTime,
+							'updated_at' => $formattedDateTime,
 						]);
 					}
 				}
@@ -65,15 +72,15 @@ class DomainController extends Controller
 					], 200);
 				} else {
 					return response()->json([
-						'success' => true,
+						'success' => false,
 						'error' => 'Unable to save domains. Please try again!'
-					], 422);
+					], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
 				}
 			} else {
 				return response()->json([
-					'success' => true,
+					'success' => false,
 					'error' => count($domains) ? 'The domains already exist.' : 'The domain is already exists.'
-				], 422);
+				], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
 			}
 		} catch (\Exception $e) {
 			return response()->json([
