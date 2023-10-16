@@ -34,10 +34,10 @@ class UserController extends Controller
     ], 200);
   }
 
-  public function show(Request $request, User $user)
+  public function show($id)
   {
     try {
-      $user = $user->with('package')->first();
+      $user = User::with('package')->find($id);
 
       return response()->json([
         'success' => true,

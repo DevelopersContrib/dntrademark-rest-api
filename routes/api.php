@@ -63,7 +63,7 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function () {
 
 		//User
 		Route::prefix('user')->group(function () {
-			Route::get('/{user}', [UserController::class, 'show']);
+			Route::get('/{id}', [UserController::class, 'show']);
 			Route::put('update', [UserController::class, 'updateUser']);
 		});
 
