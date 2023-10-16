@@ -10,14 +10,16 @@ use App\Mail\EmailVerificationMail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-use App\Models\User;
-
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+
+use App\Mail\VerificationMail;
+
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -35,7 +37,7 @@ class UserController extends Controller
   public function show(Request $request, User $user)
   {
     try {
-      $user = User::with('package')->first();
+      $user = $user->with('package')->first();
 
       return response()->json([
         'success' => true,
@@ -61,13 +63,15 @@ class UserController extends Controller
       Auth::login($user);
 
       $token = $user->createToken('api-token')->plainTextToken;
+      $isSend = $this->sendVerificationEmail($user);
 
       return response()->json([
         'success' => true,
         'data' => [
           'data' => [
             'id' => $user->id,
-            'token' => $token
+            'token' => $token,
+            'email' => $isSend
           ],
           'success' => true,
           'error' => ''
@@ -187,10 +191,8 @@ class UserController extends Controller
       'verification_link' => 'https://dash.dntrademark.com/auth/verify/' . $user->verification_code
     ];
 
-    Mail::to($user->email)->later(now()->addMinutes(1), new EmailVerificationMail($data));
+    $status = Mail::to($user->email)->send(new VerificationMail($data));
 
-    return response()->json([
-      'status' => TRUE
-    ], 200);
+    return $status;
   }
 }
