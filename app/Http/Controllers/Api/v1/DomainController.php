@@ -51,6 +51,13 @@ class DomainController extends Controller
 			$userDomainsCount = Domain::where('user_id', $user->id)->count();
 			$package = $user->package;
 
+			if (!$package) {
+				return response()->json([
+					'success' => false,
+					'error' => 'Package unavailable.'
+				], JsonResponse::HTTP_ACCEPTED);
+			}
+
 			if ($userDomainsCount < $package->end_limit) {
 				foreach ($domains as $domain) {
 					if ($this->isValidDomain($domain)) {
@@ -104,7 +111,7 @@ class DomainController extends Controller
 			return response()->json([
 				'success' => false,
 				'error' => $e->getMessage()
-			], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+			], JsonResponse::HTTP_ACCEPTED);
 		}
 	}
 
