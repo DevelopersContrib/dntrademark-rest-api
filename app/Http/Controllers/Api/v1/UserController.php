@@ -43,8 +43,11 @@ class UserController extends Controller
         'success' => true,
         'user' => new UserResource($user)
       ], JsonResponse::HTTP_OK);
-    } catch (\Throwable $th) {
-      throw $th;
+    } catch (\Exception $e) {
+      return response()->json([
+        'success' => false,
+        'error' => $e->getMessage()
+      ], JsonResponse::HTTP_ACCEPTED);
     }
   }
 
