@@ -122,4 +122,11 @@ return [
         ],
     ],
 
+    'mailer' => env('MAIL_MAILER', 'sendgrid'),
+
+    'sendgrid' => [
+        'api_key' => env('SENDGRID_API_KEY'),
+        'transport' => 'smtp',
+    ],
+
 ];

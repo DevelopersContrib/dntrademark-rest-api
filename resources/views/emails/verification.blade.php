@@ -1,4 +1,3 @@
-@component('mail::message')
 <body width="100%" style="margin: 0; padding: 0 !important; mso-line-height-rule: exactly; background-color: #F4F6FE; font-family: inherit;">
 	<center style="width: 100%; background-color: #F4F6FE;">
 		<div style="display: none; font-size: 16px;max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all; font-family: inherit;"></div>
@@ -7,10 +6,10 @@
 				<tr>
 					<td class="bg_white logo" style="padding: .85em 2.5em; text-align: center">
 						<h1 style="margin-bottom: 0;">
-						<a href="#">
-							<img src="https://main.d2jle80mf7dzx8.amplifyapp.com/_next/image?url=%2Fimages%2Flogo%2Flogo-dntrademark-final.png&w=640&q=75">
-						</a>
-						</h1> 
+							<a href="#">
+								<img src="https://main.d2jle80mf7dzx8.amplifyapp.com/_next/image?url=%2Fimages%2Flogo%2Flogo-dntrademark-final.png&w=640&q=75">
+							</a>
+						</h1>
 					</td>
 				</tr>
 				<tr>
@@ -29,16 +28,16 @@
 							</tr>
 							<tr>
 								<td class="bg_white email-section" style="text-align:center; padding: 1.5em 2.5rem 4.5rem;">
-									<a href="https://dash.dntrademark.com/auth/verify/{{ $verification_link }}" style="background: #E91E63;  padding: 1rem;  color: #fff;  text-decoration: none;  border-radius: 0.5rem;  font-weight: bold;">
-									Learn more on DNTrademark.com
-									</a>								
+									<a href="{{ $verification_link }}" style="background: #E91E63;  padding: 1rem;  color: #fff;  text-decoration: none;  border-radius: 0.5rem;  font-weight: bold;">
+										Verify you email
+									</a>
 								</td>
-							</tr>							
+							</tr>
 						</table>
 					</td>
 				</tr>
 			</table>
-			<table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: auto;">				
+			<table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: auto;">
 				<tr>
 					<td valign="middle" class="bg_black footer email-section" style="background-color: #E1E9FF; padding: 2.5em;">
 						<table>
@@ -69,4 +68,3 @@
 		</div>
 	</center>
 </body>
-@endcomponent
