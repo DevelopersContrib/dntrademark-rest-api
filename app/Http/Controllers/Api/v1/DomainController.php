@@ -65,7 +65,7 @@ class DomainController extends Controller
 						if ($count < 1) {
 							array_push($domainsArr, [
 								'user_id' => $user->id,
-								'domain_name' => $domain,
+								'domain_name' => strtolower($domain),
 								'no_of_items' => 0,
 								'created_at' => $formattedDateTime,
 								'updated_at' => $formattedDateTime,
@@ -111,6 +111,32 @@ class DomainController extends Controller
 			return response()->json([
 				'success' => false,
 				'error' => $e->getMessage()
+			], JsonResponse::HTTP_ACCEPTED);
+		}
+	}
+
+	public function domainStats(Request $request)
+	{
+		try {
+			$user = $request->user();
+			$domainsCount = Domain::where('user_id', $user->id)->count();
+			$hitsCount = Domain::where('user_id', $user->id)->where('no_of_items', '>', 0)->count();
+			$noHitsCount = Domain::where('user_id', $user->id)->where('no_of_items', 0)->count();
+			$domainsAtRiskCount = $this->domainsAtRiskCount($user->id);
+
+			return response()->json([
+				'success' => true,
+				'data' => [
+					'domainsCount' => $domainsCount,
+					'hitsCount' => $hitsCount,
+					'noHitsCount' => $noHitsCount,
+					'domainsAtRiskCount' => $domainsAtRiskCount,
+				]
+			], JsonResponse::HTTP_OK);
+		} catch (\Exception $e) {
+			return response()->json([
+				'success' => false,
+				'message' => $e->getMessage()
 			], JsonResponse::HTTP_ACCEPTED);
 		}
 	}
@@ -167,20 +193,41 @@ class DomainController extends Controller
 	{
 		try {
 			$user = $request->user();
-			$domains = Domain::where('user_id', $user->id)->with('items')->get();
-
-			$filteredDomains = Domain::whereHas('items', function ($query) {
-				$query->where('status_label', 'like', '%pending%')
-					->where('registration_number', '0000000')
-					->where('status_definition', 'like', '%NEW%');
-			})->get();
+			$count = $this->domainsAtRiskCount($user->id);
 
 			return response()->json([
 				'success' => true,
-				'domains' => DomainResource::collection($filteredDomains)
+				'domains' => $count
 			], JsonResponse::HTTP_OK);
 		} catch (\Throwable $th) {
 			throw $th;
 		}
+	}
+
+	public function domainsAtRisk($userId)
+	{
+		Domain::where('user_id', $userId)->with('items')->get();
+
+		$filteredDomains = Domain::whereHas('items', function ($query) {
+			$query->where('status_label', 'like', '%pending%')
+				->where('registration_number', '0000000')
+				->where('status_definition', 'like', '%NEW%');
+		})->get();
+
+		return DomainResource::collection($filteredDomains);
+	}
+
+	private function domainsAtRiskCount($userId)
+	{
+
+		Domain::where('user_id', $userId)->with('items')->get();
+
+		$count = Domain::whereHas('items', function ($query) {
+			$query->where('status_label', 'like', '%pending%')
+				->where('registration_number', '0000000')
+				->where('status_definition', 'like', '%NEW%');
+		})->count();
+
+		return $count;
 	}
 }
