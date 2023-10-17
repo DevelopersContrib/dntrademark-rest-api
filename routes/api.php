@@ -75,6 +75,7 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function () {
 			Route::get('count/hits', [DomainController::class, 'countHitsDomain']);
 			Route::get('count/no-hits', [DomainController::class, 'countNoHitsDomains']);
 			Route::get('risks', [DomainController::class, 'getDomainsAtRisk']);
+			Route::get('stats', [DomainController::class, 'domainStats']);
 		});
 
 		//Domain Item
