@@ -9,41 +9,62 @@ use Stripe\Checkout\Session;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
 
+use App\Models\Payment;
+use App\Models\User;
+
 class PaymentController extends Controller
 {
+	protected $stripeKey;
 	public function __construct()
 	{
-		Stripe::setApiKey(env('STRIPE_KEY_TEST'));
+		Stripe::setApiKey(env('STRIPE_SECRET_TEST'));
+		$this->stripeKey = env('STRIPE_SECRET_TEST');
 	}
 
 	public function createCharge(Request $request)
 	{
-		return response()->json([
-			'success' => false,
-			'STRIPE_KEY_TEST' => env('STRIPE_KEY_TEST')
-		], JsonResponse::HTTP_ACCEPTED);
-		// try {
-		// 	$intent = PaymentIntent::create([
-		// 		'amount' => $request->amount, // Amount in cents
-		// 		'currency' => 'usd',
-		// 		'payment_method' => 'pm_card_visa', // Payment method ID (you can obtain this from the frontend)
-		// 		'confirmation_method' => 'manual',
-		// 		'confirm' => true,
-		// 	]);
+		try {
+			$intent = PaymentIntent::create([
+				'amount' => $request->amount, // Amount in cents
+				'currency' => 'usd',
+				'payment_method' => 'pm_card_visa', // Payment method ID (you can obtain this from the frontend)
+				'confirmation_method' => 'manual',
+				'confirm' => true,
+				'return_url' => $request->return_url
+			]);
 
-		// 	return response()->json([
-		// 		'success' => true,
-		// 		'request' => $request->all(),
-		// 		'stripe' => $intent
-		// 	], JsonResponse::HTTP_OK);
+			if ($intent->status) {
+				$user = $request->user();
 
-		// 	// return response()->json(['client_secret' => $intent->client_secret]);
-		// } catch (\Exception $e) {
-		// 	return response()->json([
-		// 		'success' => false,
-		// 		'message' => $e->getMessage()
-		// 	], JsonResponse::HTTP_ACCEPTED);
-		// }
+				$payment = new Payment();
+				$payment->member_id = $user->id;
+				$payment->payment_type = implode(',', $intent->payment_method_types);
+				$payment->stripe_payment_status = $intent->status;
+				$payment->result_json = json_encode($intent);
+				$payment->mode_key = $this->stripeKey;
+
+				if ($payment->save()) {
+					$user = User::find($user->id);
+					$user->package_id = $request->package_id;
+					$user->save();
+				}
+
+				return response()->json([
+					'success' => true,
+					'intent' => $intent
+				], JsonResponse::HTTP_OK);
+			} else {
+				return response()->json([
+					'success' => false,
+					'status' => $intent->status
+				], JsonResponse::HTTP_OK);
+			}
+		} catch (\Exception $e) {
+			return response()->json([
+				'success' => false,
+				'message' => $e->getMessage()
+			], JsonResponse::HTTP_ACCEPTED);
+		}
 	}
 
 	public function createCheckoutSession(Request $request)
