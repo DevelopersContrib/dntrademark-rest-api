@@ -61,6 +61,10 @@ class UserController extends Controller
     $user->password = Hash::make($request->input('password'));
 
     if ($user->save()) {
+      if (!$user->package_id) {
+        $user->package_id = 1;
+        $user->save();
+      }
 
       $user->verification_code = Str::random(64);
       Auth::login($user);
