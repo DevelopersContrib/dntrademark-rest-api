@@ -11,14 +11,15 @@ use Stripe\PaymentIntent;
 
 use App\Models\Payment;
 use App\Models\User;
+use Carbon\Carbon;
 
 class PaymentController extends Controller
 {
 	protected $stripeKey;
 	public function __construct()
 	{
-		Stripe::setApiKey(env('STRIPE_SECRET_TEST'));
 		$this->stripeKey = env('STRIPE_SECRET_TEST');
+		Stripe::setApiKey($this->stripeKey);
 	}
 
 	public function createCharge(Request $request)
@@ -35,6 +36,7 @@ class PaymentController extends Controller
 
 			if ($intent->status) {
 				$user = $request->user();
+				$currentDateTime = Carbon::now();
 
 				$payment = new Payment();
 				$payment->member_id = $user->id;
@@ -42,6 +44,7 @@ class PaymentController extends Controller
 				$payment->stripe_payment_status = $intent->status;
 				$payment->result_json = json_encode($intent);
 				$payment->mode_key = $this->stripeKey;
+				$payment->date_paid =  $currentDateTime->format('Y-m-d');
 
 				if ($payment->save()) {
 					$user = User::find($user->id);
