@@ -70,13 +70,25 @@ class UserController extends Controller
       Auth::login($user);
 
       $token = $user->createToken('api-token')->plainTextToken;
-      $this->sendVerificationEmail($user);
+      // $this->sendVerificationEmail($user);
 
       return response()->json([
         'success' => true,
-        'user' => $user,
-        'token' => $token,
+        'data' => [
+          'data' => [
+            'id' => $user->id,
+            'token' => $token,
+          ],
+          'success' => true,
+          'error' => ''
+        ],
       ], JsonResponse::HTTP_OK);
+
+      // return response()->json([
+      //   'success' => true,
+      //   'user' => $user,
+      //   'token' => $token,
+      // ], JsonResponse::HTTP_OK);
     }
   }
 
