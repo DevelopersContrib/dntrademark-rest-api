@@ -31,27 +31,15 @@ class DatabaseSeeder extends Seeder
         ]);
         Package::create([
             'name' => 'Package A',
-            'start_limit' => 1,
-            'end_limit' => 100,
-            'price' => 9.88,
+            'start_limit' => 501,
+            'end_limit' => 2000,
+            'price' => 99,
         ]);
         Package::create([
             'name' => 'Package B',
-            'start_limit' => 101,
-            'end_limit' => 500,
-            'price' => 48.88,
-        ]);
-        Package::create([
-            'name' => 'Package C',
-            'start_limit' => 501,
-            'end_limit' => 2000,
-            'price' => 98.88,
-        ]);
-        Package::create([
-            'name' => 'Package D',
             'start_limit' => 2001,
             'end_limit' => 4000,
-            'price' => 198.88,
+            'price' => 199,
         ]);
     }
 }
