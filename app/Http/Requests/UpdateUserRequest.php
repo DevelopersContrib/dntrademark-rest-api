@@ -24,6 +24,7 @@ class UpdateUserRequest extends FormRequest
         return [
             'first_name' => ['nullable', 'string', 'min:3'],
             'last_name' => ['nullable', 'string', 'min:2'],
+           	'email' => ['nullable', 'string'],
             'package_id' => ['nullable', 'integer'],
             'is_admin' => ['nullable', 'integer'],
             'is_onboarding' => ['nullable', 'integer'],
