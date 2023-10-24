@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Domain;
 
 use App\Http\Requests\StoreDomainRequest;
+use App\Http\Resources\DomainCollection;
 use App\Http\Resources\DomainResource;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -25,11 +26,19 @@ class DomainController extends Controller
 	{
 		try {
 			$user = $request->user();
-			$domains = Domain::with('items')->where('user_id', $user->id)->get();
+			$noItemsPerPage = $request->limit ? $request->limit : 10;
+
+			if ($request->filter) {
+				$domains = Domain::where('user_id', $user->id)
+					->where('domain_name', 'like', '%' . $request->filter . '%')
+					->paginate($noItemsPerPage);
+			} else {
+				$domains = Domain::where('user_id', $user->id)->paginate($noItemsPerPage);
+			}
 
 			return response()->json([
 				'succes' => true,
-				'domains' => DomainResource::collection($domains)
+				'domains' => $domains
 			]);
 		} catch (\Throwable $th) {
 			throw $th;
