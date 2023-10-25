@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 use App\Models\Domain;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
@@ -25,7 +26,8 @@ class User extends Authenticatable
         'email',
         'package_id',
         'is_onboarding',
-        'is_admin'
+        'is_admin',
+        'password'
     ];
 
     /**
