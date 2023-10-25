@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\EnsureApiKeyIsValid;
 
 use App\Http\Controllers\Api\v1\AuthController;
+use App\Http\Controllers\Api\v1\AccountController;
 use App\Http\Controllers\Api\v1\DomainController;
 use App\Http\Controllers\Api\V1\DomainItemController;
 use App\Http\Controllers\Api\v1\PackageController;
@@ -82,5 +83,11 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function () {
 		Route::prefix('item')->group(function () {
 			Route::post('/{domain:domain_name}', [DomainItemController::class, 'store']);
 		});
-	});
+
+		//Account
+		Route::prefix('account')->group(function() {
+			Route::post('delete', [AccountController::class, 'destroy']);
+			Route::post('reset-password', [AccountController::class, 'reset']);
+		});
+	}); //sanctum
 });
