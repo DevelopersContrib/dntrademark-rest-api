@@ -85,9 +85,9 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function () {
 		});
 
 		//Account
-		Route::prefix('account')->group(function() {
+		Route::prefix('account')->group(function () {
 			Route::post('delete', [AccountController::class, 'destroy']);
-			Route::post('reset-password', [AccountController::class, 'reset']);
+			Route::put('reset-password', [AccountController::class, 'reset']);
 		});
 	}); //sanctum
 });
