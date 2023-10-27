@@ -239,4 +239,20 @@ class DomainController extends Controller
 
 		return $count;
 	}
+
+	public function destroy(Request $request) {
+		try {
+			$validatedData = $request->validate([
+				'domains' => 'required|array',
+			]);
+
+			$status = Domain::whereIn('id', $validatedData['domains'])->delete();
+
+			return response()->json([
+				'success' => true
+			], JsonResponse::HTTP_OK);
+		} catch (\Throwable $th) {
+			throw $th;
+		}
+	}
 }
