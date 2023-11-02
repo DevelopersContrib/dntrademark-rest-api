@@ -28,7 +28,7 @@ class DomainController extends Controller
 			$user = $request->user();
 			$noItemsPerPage = $request->limit ? $request->limit : 10;
 
-			$orderBy = $request->orderBy !== '' ? $request->orderBy: 'desc';
+			$orderBy = !empty($request->sortBy) ? $request->orderBy: 'desc';
 			$sortBy = !empty($request->sortBy) ? $request->sortBy: 'domain_name';
 
 			if ($request->filter) {
