@@ -29,12 +29,12 @@ class DomainController extends Controller
 			$noItemsPerPage = $request->limit ? $request->limit : 10;
 
 			$orderBy = $request->orderBy !== '' ? $request->orderBy: 'desc';
-			$sortBy = $request->sortBy !== '' ? $request->sortBy: 'domain_name';
+			$sortBy = !empty($request->sortBy) ? $request->sortBy: 'domain_name';
 
 			if ($request->filter) {
 				$domains = Domain::where('user_id', $user->id)
 					->where('domain_name', 'like', '%' . $request->filter . '%')
-					->orderBy($sortBy, $sortBy) 
+					->orderBy($sortBy, $orderBy) 
 					->paginate($noItemsPerPage);
 			} else {
 				$domains = Domain::where('user_id', $user->id)
