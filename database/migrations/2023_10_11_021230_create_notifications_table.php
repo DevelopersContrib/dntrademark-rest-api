@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('type')->nullable();
             $table->text('message')->nullable();
             $table->string('url')->nullable();
-            $table->boolean('is_read')->default('0');
+            $table->boolean('is_read')->default(false);
             $table->timestamps();
         });
     }

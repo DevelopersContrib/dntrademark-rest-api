@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\DomainItem;
+use App\Models\Notification;
 use Illuminate\Database\Seeder;
 
 use App\Models\Package;
@@ -40,6 +43,43 @@ class DatabaseSeeder extends Seeder
             'start_limit' => 2001,
             'end_limit' => 4000,
             'price' => 199,
+        ]);
+        Notification::create([
+            'user_id' => 1,
+            'type' => 'pending status',
+            'message'=> 'Domain homegrid.com has Pending status .<br><br>',
+            'url' => '/domains/items'
+        ]);
+        Notification::create([
+            'user_id' => 1,
+            'type' => 'pending status',
+            'message'=> 'Domain homegrid.com has Pending status .<br><br>',
+            'url' => '/domains/items/61'
+        ]);
+        DomainItem::create([
+            'domain_id' => '61',
+            'keyword' => 'HOMEGRID',
+            'registration_number' => '0000000',
+            'serial_number' => '90349183',
+            'status_label' => 'Live/Pending',
+            'status_date' => '2022-05-31',
+            'status_definition' => 'SU - REGISTRATION REVIEW COMPLETE',
+            'filing_date' => '2020-11-30',
+            'description' => 'Position 1 Solar batteries; Off-grid power and deep cycle battery storage systems comprised of batteries, charge controllers and inverters with integrated LED bulbs and LED light fixtures for home and commerical installations
+                              <br>Position 2 HOME GRID',
+        ]);
+        DomainItem::create([
+            'domain_id' => '61',
+            'keyword' => 'HOMEGRID',
+            'registration_number' => '0000000',
+            'serial_number' => '90755731',
+            'status_label' => 'Live/Pending',
+            'status_date' => '2022-05-31',
+            'status_definition' => 'SU - REGISTRATION REVIEW COMPLETE',
+            'filing_date' => '2020-11-30',
+            'description' => 'Position 1 The mark consists of the term HOMEGRID in stylized letters.
+                              <br>Position 2 Solar batteries; Off-grid power and deep cycle battery storage systems comprised of batteries, charge controllers and inverters with integrated LED bulbs and LED light fixtures for home and commerical installations
+                              <br>Position 3 HOME GRID',
         ]);
     }
 }
