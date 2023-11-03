@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('status')->nullable();
             $table->dateTime('date_last_crawled')->nullable();
             $table->integer('no_of_items')->nullable();
+            $table->tinyInteger('is_cron')->default(0);
             $table->timestamps();
         });
     }

@@ -24,6 +24,7 @@ return new class extends Migration
             $table->date('registration_date')->nullable();
             $table->date('abandonment_date')->nullable();
             $table->date('expiration_date')->nullable();
+            $table->longText('description')->nullable();
             $table->timestamps();
         });
     }
