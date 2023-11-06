@@ -246,6 +246,36 @@ class DomainController extends Controller
 		return $count;
 	}
 
+	public function getDomainsWithHits (Request $request)
+	{
+		try {
+			$user = $request->user();
+			$domains = Domain::where('user_id', $user->id)->where('no_of_items', '>', 0)->get();
+
+			return response()->json([
+				'succes' => true,
+				'domains' => DomainResource::collection($domains)
+			], JsonResponse::HTTP_OK);
+		} catch (\Throwable $th) {
+			throw $th;
+		}
+	}
+
+	public function getDomainsWithoutHits (Request $request)
+	{
+		try {
+			$user = $request->user();
+			$domains = Domain::where('user_id', $user->id)->where('no_of_items', '=', 0)->get();
+
+			return response()->json([
+				'succes' => true,
+				'domains' => DomainResource::collection($domains)
+			], JsonResponse::HTTP_OK);
+		} catch (\Throwable $th) {
+			throw $th;
+		}
+	}
+
 	public function destroy(Request $request) {
 		try {
 			$validatedData = $request->validate([
