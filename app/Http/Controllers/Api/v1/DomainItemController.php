@@ -11,7 +11,37 @@ use Illuminate\Http\Request;
 
 class DomainItemController extends Controller
 {
-    //
+    public function index (Request $request, $id)
+    {
+        try {
+            $user = $request->user();
+
+			$noItemsPerPage = $request->limit ? $request->limit : 10;
+			$orderBy = !empty($request->sortBy) ? $request->orderBy: 'desc';
+			$sortBy = !empty($request->sortBy) ? $request->sortBy: 'domain_id';
+			$filterBy = !empty($request->filterBy) ? $request->filterBy : 'keyword';
+			$searchKey = $request->filter;
+
+			if ($searchKey) {
+				$items = DomainItem::where('domain_id', '=', $id)
+					->where($filterBy, 'like', '%' . $searchKey . '%')
+					->orderBy($sortBy, $orderBy) 
+					->paginate($noItemsPerPage);
+			} else {
+				$items = DomainItem::where('domain_id', '=', $id)
+					->orderBy($sortBy, $orderBy)
+					->paginate($noItemsPerPage);
+			}
+
+			return response()->json([
+				'succes' => true,
+				'domains' => $items
+			], JsonResponse::HTTP_OK);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
     public function store(StoreDomainItemRequest $request, Domain $domain): JsonResponse
     {
         try {
