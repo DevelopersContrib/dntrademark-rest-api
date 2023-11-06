@@ -30,10 +30,12 @@ class DomainController extends Controller
 
 			$orderBy = !empty($request->sortBy) ? $request->orderBy: 'desc';
 			$sortBy = !empty($request->sortBy) ? $request->sortBy: 'domain_name';
+			$filterBy = !empty($request->filterBy) ? $request->filterBy : 'domain_name';
+			$searchKey = $request->filter;
 
-			if ($request->filter) {
+			if ($searchKey) {
 				$domains = Domain::where('user_id', $user->id)
-					->where('domain_name', 'like', '%' . $request->filter . '%')
+					->where($filterBy, 'like', '%' . $searchKey . '%')
 					->orderBy($sortBy, $orderBy) 
 					->paginate($noItemsPerPage);
 			} else {
@@ -250,11 +252,29 @@ class DomainController extends Controller
 	{
 		try {
 			$user = $request->user();
-			$domains = Domain::where('user_id', $user->id)->where('no_of_items', '>', 0)->get();
+
+			$noItemsPerPage = $request->limit ? $request->limit : 10;
+			$orderBy = !empty($request->sortBy) ? $request->orderBy: 'desc';
+			$sortBy = !empty($request->sortBy) ? $request->sortBy: 'domain_name';
+			$filterBy = !empty($request->filterBy) ? $request->filterBy : 'domain_name';
+			$searchKey = $request->filter;
+
+			if ($searchKey) {
+				$domains = Domain::where('user_id', $user->id)
+					->where('no_of_items', '>', 0)
+					->where($filterBy, 'like', '%' . $searchKey . '%')
+					->orderBy($sortBy, $orderBy) 
+					->paginate($noItemsPerPage);
+			} else {
+				$domains = Domain::where('user_id', $user->id)
+					->where('no_of_items', '>', 0)
+					->orderBy($sortBy, $orderBy)
+					->paginate($noItemsPerPage);
+			}
 
 			return response()->json([
 				'succes' => true,
-				'domains' => DomainResource::collection($domains)
+				'domains' => $domains
 			], JsonResponse::HTTP_OK);
 		} catch (\Throwable $th) {
 			throw $th;
@@ -265,11 +285,28 @@ class DomainController extends Controller
 	{
 		try {
 			$user = $request->user();
-			$domains = Domain::where('user_id', $user->id)->where('no_of_items', '=', 0)->get();
+			$noItemsPerPage = $request->limit ? $request->limit : 10;
+			$orderBy = !empty($request->sortBy) ? $request->orderBy: 'desc';
+			$sortBy = !empty($request->sortBy) ? $request->sortBy: 'domain_name';
+			$filterBy = !empty($request->filterBy) ? $request->filterBy : 'domain_name';
+			$searchKey = $request->filter;
+
+			if ($searchKey) {
+				$domains = Domain::where('user_id', $user->id)
+					->where('no_of_items', '=', 0)
+					->where($filterBy, 'like', '%' . $searchKey . '%')
+					->orderBy($sortBy, $orderBy) 
+					->paginate($noItemsPerPage);
+			} else {
+				$domains = Domain::where('user_id', $user->id)
+					->where('no_of_items', '=', 0)
+					->orderBy($sortBy, $orderBy)
+					->paginate($noItemsPerPage);
+			}
 
 			return response()->json([
 				'succes' => true,
-				'domains' => DomainResource::collection($domains)
+				'domains' => $domains
 			], JsonResponse::HTTP_OK);
 		} catch (\Throwable $th) {
 			throw $th;
