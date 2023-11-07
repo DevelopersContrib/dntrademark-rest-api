@@ -14,8 +14,6 @@ class DomainItemController extends Controller
     public function index (Request $request, $id)
     {
         try {
-            $user = $request->user();
-
 			$noItemsPerPage = $request->limit ? $request->limit : 10;
 			$orderBy = !empty($request->sortBy) ? $request->orderBy: 'desc';
 			$sortBy = !empty($request->sortBy) ? $request->sortBy: 'domain_id';
