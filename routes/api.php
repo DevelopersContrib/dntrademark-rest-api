@@ -80,7 +80,7 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function () {
 			Route::get('stats', [DomainController::class, 'domainStats']);
 			Route::get('hits', [DomainController::class, 'getDomainsWithHits']);
 			Route::get('no-hits', [DomainController::class, 'getDomainsWithoutHits']);
-			Route::get('items/{id}', [DomainItemController::class, 'index']);
+			Route::get('/items/{id}', [DomainItemController::class, 'index']);
 			Route::delete('delete', [DomainController::class, 'destroy']);
 		});
 
