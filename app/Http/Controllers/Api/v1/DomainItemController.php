@@ -23,19 +23,21 @@ class DomainItemController extends Controller
 			$searchKey = $request->filter;
 
 			if ($searchKey) {
-				$items = DomainItem::where('domain_id', '=', $id)
+				$items = DomainItem::with('domain')
+                    ->where('domain_id', '=', $id)
 					->where($filterBy, 'like', '%' . $searchKey . '%')
 					->orderBy($sortBy, $orderBy) 
 					->paginate($noItemsPerPage);
 			} else {
-				$items = DomainItem::where('domain_id', '=', $id)
+				$items = DomainItem::with('domain')
+                    ->where('domain_id', '=', $id)
 					->orderBy($sortBy, $orderBy)
 					->paginate($noItemsPerPage);
 			}
 
 			return response()->json([
 				'succes' => true,
-				'domains' => $items
+				'items' => $items
 			], JsonResponse::HTTP_OK);
         } catch (\Throwable $th) {
             throw $th;
