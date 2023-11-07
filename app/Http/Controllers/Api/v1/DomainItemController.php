@@ -37,7 +37,7 @@ class DomainItemController extends Controller
 
 			return response()->json([
 				'succes' => true,
-				'domains' => $items
+				'items' => $items
 			], JsonResponse::HTTP_OK);
         } catch (\Throwable $th) {
             throw $th;
