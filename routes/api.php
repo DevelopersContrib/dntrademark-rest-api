@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\V1\DomainItemController;
 use App\Http\Controllers\Api\V1\NotificationController;
 use App\Http\Controllers\Api\v1\PackageController;
 use App\Http\Controllers\Api\v1\PaymentController;
+use App\Http\Controllers\Api\V1\TwitterController;
 use App\Http\Controllers\Api\v1\UserController;
 
 /*
@@ -99,6 +100,11 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function () {
 		Route::prefix('notifications')->group(function () {
 			Route::get('/', [NotificationController::class, 'index']);
 			Route::get('/{id}', [NotificationController::class, 'show']);
+		});
+
+		//twitter
+		Route::prefix('twitter')->group(function () {
+			Route::get('tweets/{userName}', [TwitterController::class, 'getTweets']);
 		});
 	}); //sanctum
 });
