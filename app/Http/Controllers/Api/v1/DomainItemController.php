@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDomainItemRequest;
@@ -71,13 +71,12 @@ class DomainItemController extends Controller
         }
     }
 
-    public function getItem (Request $request, $itemId) {
+    public function getItemOwner (Request $request, $itemId) {
         try {
             $domainOwner = DomainsItemsOwner::with('item')
                     ->where('item_id', '=', $itemId)
                     ->first();
 
-            
             return response()->json([
                 'success' => true,
                 'domainOwner' => $domainOwner
