@@ -97,8 +97,8 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function () {
 
 		//notifications
 		Route::prefix('notifications')->group(function () {
-			Route::get('/', [NotificationController::class, 'index']);
-			Route::get('/{id}', [NotificationController::class, 'show']);
+			Route::get('/', [AccountController::class, 'getAllNotifications']);
+			Route::get('/{id}', [AccountController::class, 'getNotification']);
 		});
 	}); //sanctum
 });
