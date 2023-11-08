@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\v1\AuthController;
 use App\Http\Controllers\Api\v1\AccountController;
 use App\Http\Controllers\Api\v1\DomainController;
 use App\Http\Controllers\Api\V1\DomainItemController;
+use App\Http\Controllers\Api\V1\ItemController;
 use App\Http\Controllers\Api\V1\NotificationController;
 use App\Http\Controllers\Api\v1\PackageController;
 use App\Http\Controllers\Api\v1\PaymentController;
@@ -103,7 +104,7 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function () {
 
 		//Items
 		Route::prefix('items')->group(function () {
-			Route::get('{itemId}', [DomainItemController::class, 'getItem']);
+			Route::get('{itemId}', [ItemController::class, 'getItem']);
 		});
 	}); //sanctum
 });
