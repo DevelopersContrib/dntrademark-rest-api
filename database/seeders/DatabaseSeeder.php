@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\DomainItem;
+use App\Models\DomainsItemsOwner;
 use App\Models\Notification;
 use Illuminate\Database\Seeder;
 
@@ -81,5 +82,28 @@ class DatabaseSeeder extends Seeder
                               <br>Position 2 Solar batteries; Off-grid power and deep cycle battery storage systems comprised of batteries, charge controllers and inverters with integrated LED bulbs and LED light fixtures for home and commerical installations
                               <br>Position 3 HOME GRID',
         ]);
+
+        DomainsItemsOwner::create([
+            'item_id' => 1,
+            'keyword' => 'HOMEGRID',
+            'name' => 'Stephen Catacte',
+            'address1' => 'Yellowbell Street',
+            'city' => 'Davao City',
+            'state' => 'Davao del Sur',
+            'country'=> 'Philippines',
+            'postcode' => '8000'
+        ]);
+
+        DomainsItemsOwner::create([
+            'item_id' => 2,
+            'keyword' => 'HOMEGRID',
+            'name' => 'Stephen Catacte',
+            'address1' => 'Yellowbell Street',
+            'city' => 'Davao City',
+            'state' => 'Davao del Sur',
+            'country'=> 'Philippines',
+            'postcode' => '8000'
+        ]);
+    
     }
 }

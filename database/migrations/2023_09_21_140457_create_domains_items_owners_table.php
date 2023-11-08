@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('domains_items_owners', function (Blueprint $table) {
             $table->id();
-            $table->integer('item_id');
+            $table->foreignId('item_id');
             $table->string('keyword')->nullable();
-            $table->string('owner_laber')->nullable();
+            $table->string('owner_label')->nullable();
             $table->string('legal_entity_type')->nullable();
             $table->string('name')->nullable();
             $table->string('address1')->nullable();
