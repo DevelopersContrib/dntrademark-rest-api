@@ -11,6 +11,6 @@ class DomainsItemsOwner extends Model
 
     public function item()
     {
-        return $this->hasOne(DomainItem::class, 'item_id');
+        return $this->hasOne(DomainItem::class, 'id');
     }
 }

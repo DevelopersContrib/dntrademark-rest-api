@@ -95,10 +95,15 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function () {
 			Route::put('reset-password', [AccountController::class, 'reset']);
 		});
 
-		//notifications
+		//Notifications
 		Route::prefix('notifications')->group(function () {
 			Route::get('/', [AccountController::class, 'getAllNotifications']);
 			Route::get('/{id}', [AccountController::class, 'getNotification']);
+		});
+
+		//Items
+		Route::prefix('items')->group(function () {
+			Route::get('{itemId}', [DomainItemController::class, 'getItem']);
 		});
 	}); //sanctum
 });

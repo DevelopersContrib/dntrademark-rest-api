@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDomainItemRequest;
 use App\Models\Domain;
 use App\Models\DomainItem;
+use App\Models\DomainsItemsOwner;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -45,7 +46,7 @@ class DomainItemController extends Controller
         }
     }
 
-    public function store(StoreDomainItemRequest $request, Domain $domain): JsonResponse
+    public function store (StoreDomainItemRequest $request, Domain $domain): JsonResponse
     {
         try {
             $domainItem = new DomainItem();
@@ -67,6 +68,22 @@ class DomainItemController extends Controller
                 'success' => false,
                 'error' => $e->getMessage()
             ], JsonResponse::HTTP_ACCEPTED);
+        }
+    }
+
+    public function getItem (Request $request, $itemId) {
+        try {
+            $domainOwner = DomainsItemsOwner::with('item')
+                    ->where('item_id', '=', $itemId)
+                    ->first();
+
+            
+            return response()->json([
+                'success' => true,
+                'domainOwner' => $domainOwner
+            ], JsonResponse::HTTP_OK);
+        } catch (\Throwable $th) {
+            throw $th;
         }
     }
 }
