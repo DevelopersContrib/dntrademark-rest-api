@@ -11,6 +11,7 @@ use App\Models\Domain;
 use App\Http\Requests\StoreDomainRequest;
 use App\Http\Resources\DomainCollection;
 use App\Http\Resources\DomainResource;
+use App\Models\DomainItem;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -311,6 +312,39 @@ class DomainController extends Controller
 		} catch (\Throwable $th) {
 			throw $th;
 		}
+	}
+
+	public function getDomainItems(Request $request, $domainId) {
+		try {
+			$noItemsPerPage = $request->limit ? $request->limit : 10;
+			$orderBy = !empty($request->sortBy) ? $request->orderBy: 'desc';
+			$sortBy = !empty($request->sortBy) ? $request->sortBy: 'domain_id';
+			$filterBy = !empty($request->filterBy) ? $request->filterBy : 'keyword';
+			$searchKey = $request->filter;
+
+			if ($searchKey) {
+				$items = DomainItem::with('domain')
+                    ->where('domain_id', '=', $domainId)
+					->where($filterBy, 'like', '%' . $searchKey . '%')
+					->orderBy($sortBy, $orderBy) 
+					->paginate($noItemsPerPage);
+			} else {
+				$items = DomainItem::with('domain')
+                    ->where('domain_id', '=', $domainId)
+					->orderBy($sortBy, $orderBy)
+					->paginate($noItemsPerPage);
+			}
+
+			return response()->json([
+				'succes' => true,
+				'items' => $items
+			], JsonResponse::HTTP_OK);
+        } catch (\Exception $e) {
+            return response()->json([
+				'succes' => false,
+				'message' => $e->getMessage()
+			], JsonResponse::HTTP_OK);
+        }
 	}
 
 	public function destroy(Request $request) {
