@@ -16,6 +16,6 @@ class DomainItem extends Model
     }
 
     public function owner() {
-        return $this->belongsTo(DomainsItemsOwner::class);
+        return $this->belongsTo(DomainsItemsOwner::class, 'item_id');
     }
 }
