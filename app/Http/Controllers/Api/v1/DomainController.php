@@ -141,6 +141,9 @@ class DomainController extends Controller
 			$hitsCount = Domain::where('user_id', $user->id)->where('no_of_items', '>', 0)->count();
 			$noHitsCount = Domain::where('user_id', $user->id)->where('no_of_items', 0)->count();
 			$domainsAtRiskCount = $this->domainsAtRiskCount($user->id);
+			$investorSpaceCount = Domain::where('is_cron', '=', 1)
+							 ->where('user_id', '=', $user->id)
+							 ->count();
 
 			return response()->json([
 				'success' => true,
@@ -149,6 +152,7 @@ class DomainController extends Controller
 					'hitsCount' => $hitsCount,
 					'noHitsCount' => $noHitsCount,
 					'domainsAtRiskCount' => $domainsAtRiskCount,
+					'investorSpaceCount' => $investorSpaceCount,
 				]
 			], JsonResponse::HTTP_OK);
 		} catch (\Exception $e) {
