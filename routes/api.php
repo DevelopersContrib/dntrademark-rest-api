@@ -103,7 +103,7 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function () {
 
 		//Items
 		Route::prefix('items')->group(function () {
-			Route::get('{itemId}', [DomainItemController::class, 'getItemOwner']);
+			Route::get('/owner/{itemId}', [DomainItemController::class, 'getItemOwner']);
 		});
 	}); //sanctum
 });
