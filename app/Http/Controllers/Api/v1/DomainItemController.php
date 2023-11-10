@@ -73,13 +73,13 @@ class DomainItemController extends Controller
 
     public function getItemOwner (Request $request, $itemId) {
         try {
-            $domainOwner = DomainsItemsOwner::with('item.domain')
-                    ->where('item_id', '=', $itemId)
-                    ->first();
+            $item = DomainItem::with('domain')->where('id', '=', $itemId)->first();
+            $owner = DomainsItemsOwner::where('item_id', '=', $itemId)->first();
+            $item['owner'] = $owner;
 
             return response()->json([
                 'success' => true,
-                'domainOwner' => $domainOwner
+                'item' => $item
             ], JsonResponse::HTTP_OK);
         } catch (\Throwable $th) {
             throw $th;
