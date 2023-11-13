@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ResetPasswordRequest;
-use App\Http\Resources\NotificationResource;
-use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -36,42 +34,6 @@ class AccountController extends Controller
             return response()->json([
                 'success' => false,
                 'error' => $e->getMessage()
-            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    public function getAllNotifications (Request $request) {
-        try {
-            $user = $request->user();
-
-            $notifications = Notification::all();
-
-            return response()->json([
-                'success' => true,
-                'message' => NotificationResource::collection($notifications)
-            ], JsonResponse::HTTP_OK);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    public function getNotification (Request $request, $id) {
-        try {
-            $user = $request->user();
-
-            $notification = Notification::find($id);
-
-            return response()->json([
-                'success' => true,
-                'message' => new NotificationResource($notification)
-            ], JsonResponse::HTTP_OK);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage()
             ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
