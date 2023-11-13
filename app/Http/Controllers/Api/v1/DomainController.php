@@ -14,7 +14,7 @@ use App\Http\Resources\DomainResource;
 use App\Models\DomainItem;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\DB;
 
 class DomainController extends Controller
 {
@@ -361,6 +361,25 @@ class DomainController extends Controller
 
 			return response()->json([
 				'success' => true
+			], JsonResponse::HTTP_OK);
+		} catch (\Throwable $th) {
+			throw $th;
+		}
+	}
+
+	public function historicalHits () : JsonResponse
+	{
+		try {
+			$results = DB::table('domain_items')
+			->selectRaw('COUNT(*) as my_y, SUBSTRING(DATE_FORMAT(`updated_at`, "%M"), 1, 3) as my_month, YEAR(`updated_at`) as the_year')
+			->selectRaw('CONCAT(SUBSTRING(DATE_FORMAT(`updated_at`, "%M"), 1, 3), " ", YEAR(`updated_at`)) as my_x')
+			->groupBy('the_year', 'my_month', 'my_x') // Include all selected columns in the GROUP BY clause
+			->orderBy('updated_at')
+			->get();
+
+			return response()->json([
+				'success' => true,
+				'data' => $results
 			], JsonResponse::HTTP_OK);
 		} catch (\Throwable $th) {
 			throw $th;

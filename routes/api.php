@@ -80,6 +80,7 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function () {
 			Route::get('stats', [DomainController::class, 'domainStats']);
 			Route::get('hits', [DomainController::class, 'getDomainsWithHits']);
 			Route::get('no-hits', [DomainController::class, 'getDomainsWithoutHits']);
+			Route::get('historical-hits', [DomainController::class, 'historicalHits']);
 			Route::get('/items/{domainId}', [DomainController::class, 'getDomainItems']);
 			Route::delete('delete', [DomainController::class, 'destroy']);
 		});
@@ -97,8 +98,8 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function () {
 
 		//Notifications
 		Route::prefix('notifications')->group(function () {
-			Route::get('/', [AccountController::class, 'getAllNotifications']);
-			Route::get('/{id}', [AccountController::class, 'getNotification']);
+			Route::get('/', [NotificationController::class, '/']);
+			Route::get('/{id}', [NotificationController::class, 'show']);
 		});
 
 		//Items
