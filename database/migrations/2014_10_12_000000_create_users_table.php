@@ -23,6 +23,10 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('verification_code')->nullable();
             $table->tinyInteger('is_onboarding')->default('0');
+            $table->tinyInteger('allow_email')->default('1');
+            $table->tinyInteger('allow_sms')->default('0');
+            $table->string('sms_code')->nullable();
+            $table->string('sms_number')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
