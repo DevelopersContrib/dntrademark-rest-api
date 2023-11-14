@@ -374,7 +374,6 @@ class DomainController extends Controller
 			->selectRaw('COUNT(*) as my_y, SUBSTRING(DATE_FORMAT(`updated_at`, "%M"), 1, 3) as my_month, YEAR(`updated_at`) as the_year')
 			->selectRaw('CONCAT(SUBSTRING(DATE_FORMAT(`updated_at`, "%M"), 1, 3), " ", YEAR(`updated_at`)) as my_x')
 			->groupBy('the_year', 'my_month', 'my_x') // Include all selected columns in the GROUP BY clause
-			->orderBy('updated_at')
 			->get();
 
 			return response()->json([
