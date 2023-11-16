@@ -24,7 +24,11 @@ class UserResource extends JsonResource
             'is_onboarding' => $this->is_onboarding,
             'package' => $this->whenLoaded('package', function () {
                 return new PackageResource($this->package);
-            })
+            }),
+            'allow_email' => $this->allow_email,
+            'allow_sms' => $this->allow_sms,
+            'sms_number' => $this->sms_number,
+            'sms_code' => $this->sms_code
         ];
     }
 }
