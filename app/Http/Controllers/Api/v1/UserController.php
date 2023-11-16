@@ -87,6 +87,11 @@ class UserController extends Controller
       $data = $request->validated();
       $data = array_filter($data);
 
+      if (isset($request->allow_email) && isset($request->allow_sms)) {
+        $data['allow_email'] = $request->allow_email;
+        $data['allow_sms'] = $request->allow_sms;
+      }
+
       $user->update($data);
 
       return response()->json([

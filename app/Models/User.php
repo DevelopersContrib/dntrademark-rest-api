@@ -27,7 +27,11 @@ class User extends Authenticatable
         'package_id',
         'is_onboarding',
         'is_admin',
-        'password'
+        'password',
+        'allow_email',
+        'allow_sms',
+        'sms_number',
+        'sms_code'
     ];
 
     /**

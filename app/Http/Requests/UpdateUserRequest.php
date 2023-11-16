@@ -28,6 +28,10 @@ class UpdateUserRequest extends FormRequest
             'package_id' => ['nullable', 'integer'],
             'is_admin' => ['nullable', 'integer'],
             'is_onboarding' => ['nullable', 'integer'],
+            'allow_email' => ['nullable', 'boolean'],
+            'allow_sms' => ['nullable', 'boolean'],
+            'sms_number' => ['nullable', 'numeric'],
+            'sms_code' => ['nullable', 'string'],
         ];
     }
 }
