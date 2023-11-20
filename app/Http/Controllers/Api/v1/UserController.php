@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\EmailVerificationMail;
+// use App\Mail\EmailVerificationMail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Mail\VerificationMail;
 
 use App\Models\User;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -90,6 +91,13 @@ class UserController extends Controller
       if (isset($request->allow_email) && isset($request->allow_sms)) {
         $data['allow_email'] = $request->allow_email;
         $data['allow_sms'] = $request->allow_sms;
+      }
+
+      if (isset($request->package_id) && $request->package_id !== 1) {
+        $currentDate = Carbon::now();
+        $expiryDate = $currentDate->addMonth();
+
+        $data['package_expiry'] = $expiryDate->toDateString();
       }
 
       $user->update($data);
