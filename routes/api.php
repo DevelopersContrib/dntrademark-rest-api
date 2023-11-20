@@ -98,7 +98,7 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function () {
 
 		//Notifications
 		Route::prefix('notifications')->group(function () {
-			Route::get('/', [NotificationController::class, '/']);
+			Route::get('/', [NotificationController::class, 'index']);
 			Route::get('/{id}', [NotificationController::class, 'show']);
 		});
 
