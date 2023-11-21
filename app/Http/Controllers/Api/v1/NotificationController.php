@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class NotificationController extends Controller
 {
-    public function index (Request $request) {
+    public function getAllNotificationsByUser (Request $request) {
         try {
             $user = $request->user();
 
