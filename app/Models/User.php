@@ -31,7 +31,7 @@ class User extends Authenticatable
         'allow_email',
         'allow_sms',
         'sms_number',
-        'sms_code,',
+        'sms_code',
         'package_expiry'
     ];
 
