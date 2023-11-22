@@ -20,7 +20,8 @@ class NotificationResource extends JsonResource
             'status' => $this->type,
             'message' => $this->message,
             'url' => $this->url,
-            'date_sent' => $date->format('M j, Y')
+            'date_sent' => $date->format('M j, Y'),
+            'is_read' => $this->is_read
         ];
     }
 }
