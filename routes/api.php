@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\v1\AccountController;
 use App\Http\Controllers\Api\v1\DomainController;
 use App\Http\Controllers\Api\v1\DomainItemController;
 use App\Http\Controllers\Api\v1\NotificationController;
+use App\Http\Controllers\Api\v1\OnboardingTaskController;
 use App\Http\Controllers\Api\v1\PackageController;
 use App\Http\Controllers\Api\v1\PaymentController;
 use App\Http\Controllers\Api\v1\UserController;
@@ -51,6 +52,10 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function () {
 
 	Route::prefix('package')->group(function () {
 		Route::get('{id}', [PackageController::class, 'getPackageById']);
+	});
+	
+	Route::prefix('onboarding-tasks')->group(function () {
+		Route::get('/', [OnboardingTaskController::class, 'index']);
 	});
 	//End of public API endpoints
 
@@ -105,6 +110,11 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function () {
 		//Items
 		Route::prefix('items')->group(function () {
 			Route::get('/{itemId}', [DomainItemController::class, 'getItemOwner']);
+		});
+
+		//Onboarding
+		Route::prefix('tasks')->group(function () {
+			Route::get('/user', [OnboardingTaskController::class, 'getUserTasks']);
 		});
 	}); //sanctum
 });
