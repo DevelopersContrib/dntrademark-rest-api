@@ -7,6 +7,7 @@ namespace Database\Seeders;
 use App\Models\DomainItem;
 use App\Models\DomainsItemsOwner;
 use App\Models\Notification;
+use App\Models\OnboardingTask;
 use Illuminate\Database\Seeder;
 
 use App\Models\Package;
@@ -105,5 +106,14 @@ class DatabaseSeeder extends Seeder
             'postcode' => '8000'
         ]);
     
+        OnboardingTask::create([
+            'task' => 'Join our Telegram discussions! https://t.me/+wjCBcWeUXTdiZTE9',
+            'url' => 'https://t.me/+wjCBcWeUXTdiZTE9'
+        ]);
+
+        OnboardingTask::create([
+            'task' => 'Edit your notification settings',
+            'url' => '/settings'
+        ]);
     }
 }
