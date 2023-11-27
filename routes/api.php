@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\v1\AuthController;
 use App\Http\Controllers\Api\v1\AccountController;
 use App\Http\Controllers\Api\v1\DomainController;
 use App\Http\Controllers\Api\v1\DomainItemController;
+use App\Http\Controllers\Api\v1\DomainItemProtestController;
 use App\Http\Controllers\Api\v1\NotificationController;
 use App\Http\Controllers\Api\v1\OnboardingTaskController;
 use App\Http\Controllers\Api\v1\PackageController;
@@ -91,8 +92,13 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function () {
 		});
 
 		//Domain Item
-		Route::prefix('item')->group(function () {
-			Route::post('/{domain:domain_name}', [DomainItemController::class, 'store']);
+		// Route::prefix('item')->group(function () {
+		// 	Route::post('/{domain:domain_name}', [DomainItemController::class, 'store']);
+		// });
+		Route::prefix('items')->group(function () {
+			Route::get('/protests', [DomainItemProtestController::class, 'index']);
+			Route::post('/protests/add', [DomainItemProtestController::class, 'store']);
+			Route::put('/protests/update/{id}', [DomainItemProtestController::class, 'updateItemProtest']);
 		});
 
 		//Account
