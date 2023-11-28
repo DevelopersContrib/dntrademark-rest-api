@@ -10,9 +10,9 @@ use App\Models\DomainItemProtest;
 
 class DomainItemProtestController extends Controller
 {
-    public function index () {
+    public function index ($itemId) {
         try {
-            $itemProtests = DomainItemProtest::all();
+            $itemProtests = DomainItemProtest::where('item_id', $itemId)->get();
 
             return response()->json([
                 'success' => true,
@@ -64,20 +64,25 @@ class DomainItemProtestController extends Controller
             ]);
     
             $validatedData = array_filter($validatedData);
-
-            $itemProstest = DomainItemProtest::find($id);
-            echo '<pre>';
-            var_dump($validatedData);
-            var_dump($itemProstest->update($validatedData));
-            echo '</pre>';
-            exit;
+            $status = DomainItemProtest::find($id)->update($validatedData);
     
             return response()->json([
-                'success' => true,
-                'item_protest' => $itemProstest
+                'success' => $status
             ], JsonResponse::HTTP_OK);
         } catch (\Throwable $th) {
             throw $th;
         }
     }
+
+    public function destroy($id) {
+		try {
+			$status = DomainItemProtest::where('id', $id)->delete();
+
+			return response()->json([
+				'success' => true
+			], JsonResponse::HTTP_OK);
+		} catch (\Throwable $th) {
+			throw $th;
+		}
+	}
 }
