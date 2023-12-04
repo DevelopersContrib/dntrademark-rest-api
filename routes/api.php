@@ -96,9 +96,11 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function () {
 		// 	Route::post('/{domain:domain_name}', [DomainItemController::class, 'store']);
 		// });
 		Route::prefix('items')->group(function () {
-			Route::get('/protests', [DomainItemProtestController::class, 'index']);
 			Route::post('/protests/add', [DomainItemProtestController::class, 'store']);
 			Route::put('/protests/update/{id}', [DomainItemProtestController::class, 'updateItemProtest']);
+			Route::delete('/protests/delete/{id}', [DomainItemProtestController::class, 'destroy']);
+			Route::get('/protests/{itemId}', [DomainItemProtestController::class, 'index']);
+			Route::get('/{itemId}', [DomainItemController::class, 'getItemOwner']);
 		});
 
 		//Account
@@ -111,11 +113,6 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function () {
 		Route::prefix('notifications')->group(function () {
 			Route::get('/', [NotificationController::class, 'getAllNotificationsByUser']);
 			Route::get('/{id}', [NotificationController::class, 'show']);
-		});
-
-		//Items
-		Route::prefix('items')->group(function () {
-			Route::get('/{itemId}', [DomainItemController::class, 'getItemOwner']);
 		});
 
 		//Onboarding
