@@ -12,7 +12,11 @@ class DomainItemProtestController extends Controller
 {
     public function index ($itemId) {
         try {
-            $itemProtests = DomainItemProtest::where('item_id', $itemId)->get();
+            if ($itemId === 'all') {
+                $itemProtests = DomainItemProtest::all();
+            } else {
+                $itemProtests = DomainItemProtest::where('item_id', $itemId)->get();
+            }
 
             return response()->json([
                 'success' => true,
