@@ -13,9 +13,9 @@ class DomainItemProtestController extends Controller
     public function index ($itemId) {
         try {
             if ($itemId === 'all') {
-                $itemProtests = DomainItemProtest::all();
+                $itemProtests = DomainItemProtest::paginate();
             } else {
-                $itemProtests = DomainItemProtest::where('item_id', $itemId)->get();
+                $itemProtests = DomainItemProtest::where('item_id', $itemId)->paginate();
             }
 
             return response()->json([
