@@ -73,6 +73,9 @@ class UserController extends Controller
       $token = $user->createToken('api-token')->plainTextToken;
       // $this->sendVerificationEmail($user);
 
+      //Call create invoice vnoc.
+      InvoiceController::create($user->id);
+
       return response()->json([
         'success' => true,
         'user' => $user,

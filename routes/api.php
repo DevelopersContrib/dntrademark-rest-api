@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\v1\AccountController;
 use App\Http\Controllers\Api\v1\DomainController;
 use App\Http\Controllers\Api\v1\DomainItemController;
 use App\Http\Controllers\Api\v1\DomainItemProtestController;
+use App\Http\Controllers\Api\v1\InvoiceController;
 use App\Http\Controllers\Api\v1\NotificationController;
 use App\Http\Controllers\Api\v1\OnboardingTaskController;
 use App\Http\Controllers\Api\v1\PackageController;
@@ -119,5 +120,8 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function () {
 		Route::prefix('tasks')->group(function () {
 			Route::get('/user', [OnboardingTaskController::class, 'getUserTasks']);
 		});
+
+		//Invoice Vnoc
+		Route::post('/invoices/create/{userId}', [InvoiceController::class, 'create']);
 	}); //sanctum
 });
