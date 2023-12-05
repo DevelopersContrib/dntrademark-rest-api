@@ -122,6 +122,10 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function () {
 		});
 
 		//Invoice Vnoc
-		Route::post('/invoices/create/{userId}', [InvoiceController::class, 'create']);
+		Route::prefix('invoices')->group(function () {
+			Route::get('/', [InvoiceController::class, 'index']);
+			Route::get('/pending', [InvoiceController::class, 'count']);
+			Route::post('/create/{userId}', [InvoiceController::class, 'create']);
+		});
 	}); //sanctum
 });
