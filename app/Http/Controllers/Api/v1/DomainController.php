@@ -108,6 +108,9 @@ class DomainController extends Controller
 				$isSaved = Domain::insert($domainsArr);
 
 				if ($isSaved) {
+					//Call create invoice vnoc.
+					InvoiceController::create($user->id);
+
 					$message = count($domainsArr) . ' out of ' . count($domains) . (count($domainsArr) > 1 ? ' domains are saved.' : ' domain is saved.') . $message;
 					return response()->json([
 						'success' => $isSaved,
