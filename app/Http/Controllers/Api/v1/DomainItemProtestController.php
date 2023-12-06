@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\DomainItem;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -21,6 +22,19 @@ class DomainItemProtestController extends Controller
             return response()->json([
                 'success' => true,
                 'item_protests' => $itemProtests
+            ], JsonResponse::HTTP_OK);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    public function getItemProtest ($id) {
+        try {
+            $itemProtest = DomainItemProtest::find($id);
+
+            return response()->json([
+                'success' => true,
+                'itemProtest' => $itemProtest
             ], JsonResponse::HTTP_OK);
         } catch (\Throwable $th) {
             throw $th;
