@@ -100,6 +100,7 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function () {
 			Route::post('/protests/add', [DomainItemProtestController::class, 'store']);
 			Route::put('/protests/update/{id}', [DomainItemProtestController::class, 'updateItemProtest']);
 			Route::delete('/protests/delete/{id}', [DomainItemProtestController::class, 'destroy']);
+			Route::get('/protests/item-protest/{id}', [DomainItemProtestController::class, 'getItemProtest']);
 			Route::get('/protests/{itemId}', [DomainItemProtestController::class, 'index']);
 			Route::get('/{itemId}', [DomainItemController::class, 'getItemOwner']);
 		});
