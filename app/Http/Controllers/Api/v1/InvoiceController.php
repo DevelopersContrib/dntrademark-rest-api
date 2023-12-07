@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice;
 use GuzzleHttp\Client;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 
@@ -25,16 +26,14 @@ class InvoiceController extends Controller
         }
     }
 
-    public function count(Request $request) {
+    public function show($id) : JsonResponse {
         try {
-            $user = $request->user();
-
-            $count = Invoice::where('status', 'pending')->count();
-
+            $invoice = Invoice::find($id);
+            
             return response()->json([
                 'success' => true,
-                'count' => $count
-            ]);
+                'invoice' => $invoice
+            ], JsonResponse::HTTP_OK);
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -68,4 +67,21 @@ class InvoiceController extends Controller
             throw $th;
         }
     }
+
+    public function count(Request $request) {
+        try {
+            $user = $request->user();
+
+            $count = Invoice::where('status', 'pending')->count();
+
+            return response()->json([
+                'success' => true,
+                'count' => $count
+            ]);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    
 }
