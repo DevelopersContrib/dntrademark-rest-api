@@ -122,11 +122,11 @@ Route::middleware(EnsureApiKeyIsValid::class)->prefix('v1')->group(function () {
 			Route::get('/user', [OnboardingTaskController::class, 'getUserTasks']);
 		});
 
-		//Invoice Vnoc
+		//Invoices
 		Route::prefix('invoices')->group(function () {
 			Route::get('/', [InvoiceController::class, 'index']);
 			Route::get('/pending', [InvoiceController::class, 'count']);
-			Route::post('/create/{userId}', [InvoiceController::class, 'create']);
+			// Route::post('/create/{userId}', [InvoiceController::class, 'create']);
 			Route::get('/{id}', [InvoiceController::class, 'show']);
 		});
 	}); //sanctum
