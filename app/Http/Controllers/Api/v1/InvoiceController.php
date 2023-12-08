@@ -13,11 +13,35 @@ class InvoiceController extends Controller
 {
     public function index (Request $request) {
         try {
+            // $user = $request->user();
+
+            // $invoices = Invoice::where('user_id', $user->id)->paginate();
+
+            // return response()->json([
+            //     'success' => true,
+            //     'invoices' => $invoices
+            // ]);
+
             $user = $request->user();
+			$noItemsPerPage = $request->limit ? $request->limit : 10;
 
-            $invoices = Invoice::where('user_id', $user->id)->get();
+			$orderBy = !empty($request->sortBy) ? $request->orderBy: 'desc';
+			$sortBy = !empty($request->sortBy) ? $request->sortBy: 'id';
+			$searchBy = !empty($request->searchBy) ? $request->searchBy : 'desc';
+			$searchKey = $request->search;
 
-            return response()->json([
+			if ($searchKey) {
+				$invoices = Invoice::where('user_id', $user->id)
+					->where($searchBy, 'like', '%' . $searchKey . '%')
+					->orderBy($sortBy, $orderBy) 
+					->paginate($noItemsPerPage);
+			} else {
+				$invoices = Invoice::where('user_id', $user->id)
+					->orderBy($sortBy, $orderBy)
+					->paginate($noItemsPerPage);
+			}
+
+			return response()->json([
                 'success' => true,
                 'invoices' => $invoices
             ]);
