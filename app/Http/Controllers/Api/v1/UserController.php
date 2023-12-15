@@ -75,6 +75,7 @@ class UserController extends Controller
 
       //Call create invoice vnoc.
       InvoiceController::create($user->id);
+      LeadController::saveLead($user->email, "dntrademark.com");
 
       return response()->json([
         'success' => true,

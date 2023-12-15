@@ -97,6 +97,22 @@ class DomainController extends Controller
 						}
 					}
 				}
+			} else if ($request->add_domain === true) { 
+				foreach ($domains as $domain) {
+					if ($this->isValidDomain($domain)) {
+						$count = Domain::where('domain_name', $domain)->count();
+						if ($count < 1) {
+							array_push($domainsArr, [
+								'user_id' => $user->id,
+								'domain_name' => strtolower($domain),
+								'no_of_items' => 0,
+								'created_at' => $formattedDateTime,
+								'updated_at' => $formattedDateTime,
+							]);
+							$totalAddedDomains = $userDomainsCount + count($domainsArr);
+						}
+					}
+				}
 			} else {
 				return response()->json([
 					'success' => false,
