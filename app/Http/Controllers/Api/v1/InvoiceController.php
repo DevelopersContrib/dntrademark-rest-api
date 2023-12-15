@@ -7,21 +7,11 @@ use App\Models\Invoice;
 use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redis;
 
 class InvoiceController extends Controller
 {
     public function index (Request $request) {
         try {
-            // $user = $request->user();
-
-            // $invoices = Invoice::where('user_id', $user->id)->paginate();
-
-            // return response()->json([
-            //     'success' => true,
-            //     'invoices' => $invoices
-            // ]);
-
             $user = $request->user();
 			$noItemsPerPage = $request->limit ? $request->limit : 10;
 
@@ -44,9 +34,12 @@ class InvoiceController extends Controller
 			return response()->json([
                 'success' => true,
                 'invoices' => $invoices
-            ]);
-        } catch (\Throwable $th) {
-            throw $th;
+            ], JsonResponse::HTTP_OK);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], JsonResponse::HTTP_OK);
         }
     }
 

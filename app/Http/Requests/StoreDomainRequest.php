@@ -35,6 +35,7 @@ class StoreDomainRequest extends FormRequest
     {
         return [
             'domains' => 'required',
+            'add_domain' => ['nullable', 'boolean']
         ];
     }
 }
