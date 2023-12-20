@@ -47,9 +47,11 @@ class PaymentController extends Controller
 				$payment->date_paid =  $currentDateTime->format('Y-m-d');
 
 				if ($payment->save()) {
-					$user = User::find($user->id);
-					$user->package_id = $request->package_id;
-					$user->save();
+					if (!empty($request->package_id)) {
+						$user = User::find($user->id);
+						$user->package_id = $request->package_id;
+						$user->save();
+					}
 				}
 
 				return response()->json([
